@@ -8,10 +8,10 @@ const ListAreaStyle = styled.div`
   flex-wrap: wrap;
 `;
 
-const List = ({ Department }) => {
+const List = ({ homeApply }) => {
   return (
     <ListAreaStyle>
-      {Department?.members.map((member) => (
+      {homeApply?.map((member) => (
         <Item member={member} />
       ))}
     </ListAreaStyle>

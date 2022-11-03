@@ -13,11 +13,11 @@ const TextStyle = styled.p`
   margin: 0;
 `;
 
-const Main = ({ Department }) => {
+const Main = ({ homeApplies }) => {
   return (
     <BoxStyle>
-      <TextStyle>{Department?.department}</TextStyle>
-      <List Department={Department} />
+      <TextStyle>인사팀</TextStyle>
+      <List />
     </BoxStyle>
   );
 };

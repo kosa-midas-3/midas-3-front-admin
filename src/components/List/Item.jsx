@@ -144,7 +144,7 @@ const Item = ({ member }) => {
             </MenuItem>
           </Menu>
         </IconStyle>
-        <NameStyle>{member.name}</NameStyle>
+        <NameStyle>{member.nickname}</NameStyle>
         <TimeStyle>
           {member.startTime &&
             zero(time.hour()) +

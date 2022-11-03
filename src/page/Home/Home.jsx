@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { postAuth } from "../../api/Auth/AuthApi";
+import { getHomeApply, postAuth } from "../../api/Auth/AuthApi";
 import Header from "../../components/Header/Header";
 import Main from "../../components/Main/Main";
 import Footer from "../../components/Footer/Footer";
@@ -12,7 +12,7 @@ const BoxStyle = styled.div`
 `;
 
 const Home = () => {
-  const { data, refetch, isLoading } = useQuery("getUserInfo", postAuth, {
+  const { data } = useQuery("getUserInfo", getHomeApply, {
     onSuccess: () => {},
     onError: () => {},
     onSettled: () => {},
@@ -20,8 +20,8 @@ const Home = () => {
 
   return (
     <BoxStyle>
-      <Header nickname={data?.nickname} />
-      <Main Department={data?.Department} />
+      <Header />
+      <Main homeApplies={data?.homeApplies} />
       <Footer />
     </BoxStyle>
   );
