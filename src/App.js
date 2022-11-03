@@ -6,25 +6,19 @@ import List from "./components/List/Item";
 import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Login from "./components/Login/Login";
-import { getUserName } from "./util/getUserName";
+import { getPassword } from "./util/getPassword";
 
 function App() {
-  const [login, setLogin] = useState(false);
-
-  useEffect(() => {
-    setLogin(getUserName());
-  }, []);
-
   const [queryClient] = useState(new QueryClient());
-
+  const [isPassword, setIsPassword] = useState(!!getPassword());
   return (
     <QueryClientProvider client={queryClient}>
-      <Layout
-        justify={localStorage.getItem("username") ? "space-between" : "center"}
-      >
-        {!login ? <Login setLogin={setLogin} /> : <Home />}
-        {/* <List /> */}
-      </Layout>
+      {!isPassword ? (
+        <Login setIsPassword={setIsPassword} />
+      ) : (
+        <Home setIsPassword={setIsPassword} />
+      )}
+      {/* <List /> */}
     </QueryClientProvider>
   );
 }

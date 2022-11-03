@@ -7,21 +7,15 @@ import Footer from "../../components/Footer/Footer";
 import { useQuery } from "react-query";
 
 const BoxStyle = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 1124px;
+  margin: 0 auto;
 `;
 
-const Home = () => {
-  const { data } = useQuery("getUserInfo", getHomeApply, {
-    onSuccess: () => {},
-    onError: () => {},
-    onSettled: () => {},
-  });
-
+const Home = ({ setIsPassword }) => {
   return (
     <BoxStyle>
-      <Header />
-      <Main homeApplies={data?.homeApplies} />
+      <Header setIsPassword={setIsPassword} />
+      <Main />
       <Footer />
     </BoxStyle>
   );

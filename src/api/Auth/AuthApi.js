@@ -1,8 +1,8 @@
 import CustomAxios from "../../util/CustomAxios";
-import { getUserName } from "../../util/getUserName";
+import { getPassword } from "../../util/getPassword";
 
 export const postAuth = async () => {
-  const { data } = await CustomAxios.post(`/auth?name=${getUserName()}`);
+  const { data } = await CustomAxios.post(`/auth?name=${getPassword()}`);
   // console.log(data);
   return data;
 };

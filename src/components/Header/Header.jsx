@@ -17,16 +17,21 @@ const TextStyle = styled.p`
   font-size: 35px;
   font-weight: bold;
   margin: 20px 0;
+  display: inline;
 `;
 
 const SpanStyle = styled.span`
   color: #6cdc84;
 `;
 
-const Header = () => {
+const Header = ({ setIsPassword }) => {
   const { data } = useQuery("getMyInfo", postAuth, {
     onSuccess: () => {},
-    onError: () => {},
+    onError: () => {
+      alert("유저 정보가 존재하지 않습니다.");
+      setIsPassword(false);
+      localStorage.removeItem("password");
+    },
     onSettled: () => {},
   });
 

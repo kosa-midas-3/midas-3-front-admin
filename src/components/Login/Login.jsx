@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
-import { getUserName } from "../../util/getUserName";
+import { FullInput, useInput, FullButton } from "@kimuichan/ui-base";
+import { useMutation } from "react-query";
+import { postAuth } from "../../api/Auth/AuthApi";
+const LoginWrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const LoginStyle = styled.div`
   width: 500px;
   height: 500px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: space-evenly;
   box-shadow: 0 0 10px #ddd;
   border-radius: 10px;
+  padding: 50px;
 `;
 
 const TitleStyle = styled.div`
@@ -18,56 +28,52 @@ const TitleStyle = styled.div`
   display: flex;
   font-size: 60px;
   align-items: center;
+  padding: 40px 0 80px;
 `;
 
 const TextStyle = styled.p`
   font-size: 25px;
   font-weight: bold;
+  margin-left: 20px;
 `;
 
-const InputStyle = styled.input`
-  width: 430px;
-  height: 50px;
-  border: 3px solid #eee;
-  border-radius: 10px;
-  margin-bottom: 50px;
-`;
-
-const BtnStyle = styled.button`
-  width: 430px;
-  height: 58px;
-  border: none;
-  background-color: #6cdc84;
-  font-size: 23px;
-  color: #fff;
-  font-weight: bold;
-  border-radius: 10px;
-  margin-bottom: 30px;
-  cursor: pointer;
-`;
-
-const Login = ({ setLogin }) => {
-  const [username, setUserame] = useState("");
-
+const Login = ({ setIsPassword }) => {
+  const [password, setPassword] = useInput("");
+  const inputRef = useRef(null);
+  const { mutate } = useMutation(postAuth, {
+    onSuccess: () => {
+      setIsPassword(!!password);
+    },
+    onError: () => {
+      setPassword({ target: { value: "" } });
+      alert("사용자가 존재하지 않습니다.");
+      localStorage.removeItem("password");
+    },
+  });
   const onClickHandler = () => {
-    localStorage.setItem("username", username);
-    setLogin({ getUserName });
+    console.log(password);
+    localStorage.setItem("password", password);
+    mutate();
   };
 
   return (
-    <LoginStyle>
-      <TitleStyle>
-        👋
-        <TextStyle>
-          닉네임을 입력하여 <br /> 로그인하세요
-        </TextStyle>
-      </TitleStyle>
-      <InputStyle
-        onChange={(e) => setUserame(e.target.value)}
-        value={username}
-      />
-      <BtnStyle onClick={onClickHandler}>로그인</BtnStyle>
-    </LoginStyle>
+    <LoginWrapper>
+      <LoginStyle>
+        <TitleStyle>
+          👋
+          <TextStyle>
+            비밀번호를 입력하여 <br /> 로그인하세요
+          </TextStyle>
+        </TitleStyle>
+        <FullInput
+          onChange={setPassword}
+          value={password}
+          inputRef={inputRef}
+          placeholder="비밀번호를 입력하세요."
+        />
+        <FullButton onClick={onClickHandler}>로그인</FullButton>
+      </LoginStyle>
+    </LoginWrapper>
   );
 };
 

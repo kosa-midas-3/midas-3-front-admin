@@ -3,16 +3,17 @@ import styled from "styled-components";
 import Item from "./Item";
 
 const ListAreaStyle = styled.div`
-  width: 1200px;
   display: flex;
+  gap: 20px;
   flex-wrap: wrap;
+  margin-bottom: 40px;
 `;
 
 const List = ({ homeApply }) => {
   return (
     <ListAreaStyle>
-      {homeApply?.map((member) => (
-        <Item member={member} />
+      {homeApply?.map((member, idx) => (
+        <Item member={member} key={idx} />
       ))}
     </ListAreaStyle>
   );
