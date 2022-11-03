@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button, Tag } from "@kimuichan/ui-base";
 import { zero, timeCa } from "../../util/changeTime";
 import MenuButton from "../MenuButton";
+import { useModal, ConfirmModal } from "@kimuichan/ui-base";
+import { homeApply } from "../../api/Auth/AuthApi";
 
 const BoxStyle = styled.div`
   padding: 0 15px;
@@ -48,22 +50,45 @@ const CustomButton = styled(Button)`
   width: 100%;
 `;
 
-const Item = ({ member }) => {
-  const [time, setTime] = useState(timeCa(member.startTime));
+const Item = ({ member = null }) => {
+  const [time, setTime] = useState(
+    !!member.startTime && timeCa(member.startTime)
+  );
+  const { modalRef, open, setIsOpen } = useModal("modal");
+
+  useEffect(() => {
+    if (time && member.startTime) {
+      console.log(member.startTime);
+      setInterval(() => {
+        setTime((prev) => prev.subtract(1, "second"));
+      }, 1000);
+    }
+  }, [member.startTime]);
 
   return (
     <BoxStyle state={member.workingStatus === "GO" ? true : false}>
-      <MenuButton></MenuButton>
+      {open && (
+        <ConfirmModal
+          text={{ accept: "수락", refuse: "거절", title: "재택근무 요청" }}
+          modalRef={modalRef}
+          setIsOpen={setIsOpen}
+          onFinally={(result) => {
+            homeApply(result, member.homeApplyId);
+          }}
+        ></ConfirmModal>
+      )}
+      <MenuButton member={member}></MenuButton>
       <AreaStyle>
         <DepartmentStyle>{member.department}</DepartmentStyle>
         <NameStyle>{member.nickname}</NameStyle>
         <TimeStyle>
-          {member.startTime &&
-            zero(time.hour()) +
+          {member?.startTime
+            ? zero(time.hour()) +
               ":" +
               zero(time.minute()) +
               ":" +
-              zero(time.second())}
+              zero(time.second())
+            : "00:00:00"}
         </TimeStyle>
       </AreaStyle>
       <TagAreaStyle>
@@ -77,8 +102,11 @@ const Item = ({ member }) => {
 
       <CustomButton
         size="md"
-        onClick={() => console.log(1)}
+        disable={member.homeApplyStatus === "HOME_APPLY" ? false : true}
         color={homeApplyColor[member.homeApplyStatus]}
+        onClick={() => {
+          setIsOpen(true);
+        }}
       >
         {homeApplyText[member.homeApplyStatus]}
       </CustomButton>

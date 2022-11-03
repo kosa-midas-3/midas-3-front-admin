@@ -1,14 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaPlusCircle } from "react-icons/fa";
-import {
-  Button,
-  CustomModal,
-  useModal,
-  FullButton,
-  FullInput,
-  useInput,
-} from "@kimuichan/ui-base";
+import { Button, CustomModal, useModal } from "@kimuichan/ui-base";
 
 const FooterArea = styled.div`
   position: fixed;

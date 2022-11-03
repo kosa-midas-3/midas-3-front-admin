@@ -4,11 +4,15 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
+import { delUser, putUser } from "../../api/Auth/AuthApi";
 
 const ITEM_HEIGHT = 48;
 
 const MenuButton = ({ member }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [department, setDepartment] = useState("");
+  const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -18,8 +22,9 @@ const MenuButton = ({ member }) => {
     setAnchorEl(null);
   };
 
-  const onClickListener = () => {
-    console.log("aa");
+  const onClickDelHandler = () => {
+    delUser(member.name);
+    console.log(member.name);
   };
 
   const open = Boolean(anchorEl);
@@ -53,7 +58,7 @@ const MenuButton = ({ member }) => {
         <MenuItem
           onClick={() => {
             handleClose();
-            onClickListener();
+            // onClickListener();
           }}
         >
           코어타임 설정
@@ -61,7 +66,6 @@ const MenuButton = ({ member }) => {
         <MenuItem
           onClick={() => {
             handleClose();
-            onClickListener();
           }}
         >
           수정
@@ -69,7 +73,7 @@ const MenuButton = ({ member }) => {
         <MenuItem
           onClick={() => {
             handleClose();
-            onClickListener();
+            onClickDelHandler();
           }}
         >
           삭제

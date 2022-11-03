@@ -9,6 +9,9 @@ export const minus1Second = (time, setTime) => {
 };
 
 export const timeCa = (string) => {
+  if (!string) {
+    return null;
+  }
   let day = new dayjs();
   const time = dayjs(string);
   // day = dayjs(`${day.year()}-${day.month()}-${day.date()} 08:00:00`);
