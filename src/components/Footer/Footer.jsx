@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { FaPlusCircle } from "react-icons/fa";
-import { Button, CustomModal, useModal } from "@kimuichan/ui-base";
+import { Button, useModal } from "@kimuichan/ui-base";
+import AddWorkerModal from "../Modal/AddWorkerModal";
 
 const FooterArea = styled.div`
   position: fixed;
@@ -10,12 +11,10 @@ const FooterArea = styled.div`
 `;
 
 const Footer = () => {
-  const { modalRef, open, setIsOpen } = useModal("modal");
+  const { modalRef, open, setIsOpen } = useModal("addWorker");
   return (
     <FooterArea>
-      {open && (
-        <CustomModal modalRef={modalRef} setIsOpen={setIsOpen}></CustomModal>
-      )}
+      {open && <AddWorkerModal modalRef={modalRef} setIsOpen={setIsOpen} />}
       <Button
         style={{ width: "auto", height: "auto", borderRadius: "50%" }}
         size="lg"

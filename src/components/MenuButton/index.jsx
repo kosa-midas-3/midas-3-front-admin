@@ -4,15 +4,40 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
-import { delUser, putUser } from "../../api/Auth/AuthApi";
+import { useMutation, useQueryClient } from "react-query";
+import { deleteUser } from "../../api/User/UserApi";
+import { ConfirmModal, useModal } from "@kimuichan/ui-base";
+import { getHomeApply } from "../../api/Auth/AuthApi";
+import ModifyWorkerModal from "../Modal/ModifyWorkerModal";
+import CoreTimeModal from "../Modal/CoreTimeModal";
 
 const ITEM_HEIGHT = 48;
 
 const MenuButton = ({ member }) => {
+  const queryClient = useQueryClient();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [department, setDepartment] = useState("");
-  const [name, setName] = useState("");
-  const [nickname, setNickname] = useState("");
+  const {
+    modalRef: deleteModalRef,
+    open: deleteUserModalOpen,
+    setIsOpen: deleteUserSetIsOpen,
+  } = useModal("deleteUserModal");
+  const { mutate: deleteUserMutate } = useMutation(deleteUser, {
+    onSuccess: async () => {
+      const userData = await getHomeApply();
+      queryClient.setQueriesData("getUserInfo", userData);
+    },
+  });
+  const {
+    modalRef: modifyModalRef,
+    open: ModifyModalOpen,
+    setIsOpen: ModifyModalSetIsOpen,
+  } = useModal("modifyUserModal");
+
+  const {
+    modalRef: coreTimeModalRef,
+    open: coreTimeOpen,
+    setIsOpen: coreTimeSetIsOpen,
+  } = useModal("coreTimeModal");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -22,14 +47,42 @@ const MenuButton = ({ member }) => {
     setAnchorEl(null);
   };
 
-  const onClickDelHandler = () => {
-    delUser(member.name);
-    console.log(member.name);
-  };
-
   const open = Boolean(anchorEl);
   return (
     <IconStyle>
+      {deleteUserModalOpen ? (
+        <ConfirmModal
+          modalRef={deleteModalRef}
+          text={{
+            accept: "삭제",
+            refuse: "취소",
+            title: `${member?.nickname}를\n삭제하시겠습니까?`,
+          }}
+          onFinally={(result) => result && deleteUserMutate(member?.name)}
+          setIsOpen={deleteUserSetIsOpen}
+        />
+      ) : (
+        <></>
+      )}
+      {ModifyModalOpen ? (
+        <ModifyWorkerModal
+          member={member}
+          modalRef={modifyModalRef}
+          setIsOpen={ModifyModalSetIsOpen}
+        />
+      ) : (
+        <></>
+      )}
+      {coreTimeOpen ? (
+        <CoreTimeModal
+          member={member}
+          modalRef={coreTimeModalRef}
+          setIsOpen={coreTimeSetIsOpen}
+        />
+      ) : (
+        <></>
+      )}
+
       <IconButton
         aria-label="more"
         id="long-button"
@@ -58,7 +111,7 @@ const MenuButton = ({ member }) => {
         <MenuItem
           onClick={() => {
             handleClose();
-            // onClickListener();
+            coreTimeSetIsOpen(true);
           }}
         >
           코어타임 설정
@@ -66,6 +119,7 @@ const MenuButton = ({ member }) => {
         <MenuItem
           onClick={() => {
             handleClose();
+            ModifyModalSetIsOpen(true);
           }}
         >
           수정
@@ -73,7 +127,7 @@ const MenuButton = ({ member }) => {
         <MenuItem
           onClick={() => {
             handleClose();
-            onClickDelHandler();
+            deleteUserSetIsOpen(true);
           }}
         >
           삭제

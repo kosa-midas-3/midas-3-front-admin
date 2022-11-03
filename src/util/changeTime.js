@@ -20,7 +20,5 @@ export const timeCa = (string) => {
     .subtract(day.minute(), "minute")
     .subtract(day.second(), "second");
 
-  day = day.add(8, "hour");
-
   return day;
 };

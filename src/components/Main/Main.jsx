@@ -1,3 +1,4 @@
+import { useModal } from "@kimuichan/ui-base";
 import React from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";

@@ -51,7 +51,6 @@ const Login = ({ setIsPassword }) => {
     },
   });
   const onClickHandler = () => {
-    console.log(password);
     localStorage.setItem("password", password);
     mutate();
   };
